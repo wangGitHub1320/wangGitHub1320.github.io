@@ -181,7 +181,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h2 id="一、速度部分的程序分析"><a href="#一、速度部分的程序分析" class="headerlink" title="一、速度部分的程序分析"></a>一、速度部分的程序分析</h2><p>在函数bool MRobot::readSpeed()中：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">//---------------- 积分计算里程计信息 ------------//</span><br><span class="line">//计算得到两轮机器人的 平均 (线)速度 vx_</span><br><span class="line">vx_  = (vel_right.odoemtry_float + vel_left.odoemtry_float) / 2 / 1000; </span><br><span class="line">//计算得到两轮机器人的 角速度 vth_</span><br><span class="line">vth_ = (vel_right.odoemtry_float - vel_left.odoemtry_float) / ROBOT_LENGTH;</span><br><span class="line"></span><br><span class="line">curr_time = ros::Time::now();//得到当前的时间</span><br><span class="line"></span><br><span class="line">double dt = (curr_time - last_time_).toSec();//计算两次时间的间隔</span><br><span class="line">double delta_x = (vx_ * cos(th_) - vy_ * sin(th_)) * dt;//计算dt时间内x方向上的变化</span><br><span class="line">double delta_y = (vx_ * sin(th_) + vy_ * cos(th_)) * dt;//计算dt时间内y方向上的变化</span><br><span class="line">double delta_th = vth_ * dt;//计算dt时间内转过的角度th的变化</span><br><span class="line"></span><br><span class="line">x_ += delta_x;//在x方向上积分得到x方向上已经走过的路程--&gt;里程计数据</span><br><span class="line">y_ += delta_y;//在y方向上积分得到y方向上已经走过的路程--&gt;里程计数据</span><br><span class="line">th_ += delta_th;//转角的积分，得到转过的角度</span><br><span class="line">last_time_ = curr_time; //时间更新，记录最新的时间</span><br></pre></td></tr></table></figure>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="comment">//---------------- 积分计算里程计信息 ------------//</span></span><br><span class="line"><span class="comment">//计算得到两轮机器人的 平均 (线)速度 vx_</span></span><br><span class="line">vx_  = (vel_right.odoemtry_float + vel_left.odoemtry_float) / <span class="number">2</span> / <span class="number">1000</span>; </span><br><span class="line"><span class="comment">//计算得到两轮机器人的 角速度 vth_</span></span><br><span class="line">vth_ = (vel_right.odoemtry_float - vel_left.odoemtry_float) / ROBOT_LENGTH;</span><br><span class="line"></span><br><span class="line">curr_time = ros::Time::now();<span class="comment">//得到当前的时间</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">double</span> dt = (curr_time - last_time_).toSec();<span class="comment">//计算两次时间的间隔</span></span><br><span class="line"><span class="keyword">double</span> delta_x = (vx_ * <span class="built_in">cos</span>(th_) - vy_ * <span class="built_in">sin</span>(th_)) * dt;<span class="comment">//计算dt时间内x方向上的变化</span></span><br><span class="line"><span class="keyword">double</span> delta_y = (vx_ * <span class="built_in">sin</span>(th_) + vy_ * <span class="built_in">cos</span>(th_)) * dt;<span class="comment">//计算dt时间内y方向上的变化</span></span><br><span class="line"><span class="keyword">double</span> delta_th = vth_ * dt;<span class="comment">//计算dt时间内转过的角度th的变化</span></span><br><span class="line"></span><br><span class="line">x_ += delta_x;<span class="comment">//在x方向上积分得到x方向上已经走过的路程--&gt;里程计数据</span></span><br><span class="line">y_ += delta_y;<span class="comment">//在y方向上积分得到y方向上已经走过的路程--&gt;里程计数据</span></span><br><span class="line">th_ += delta_th;<span class="comment">//转角的积分，得到转过的角度</span></span><br><span class="line">last_time_ = curr_time; <span class="comment">//时间更新，记录最新的时间</span></span><br></pre></td></tr></table></figure>
 <p>两轮机器人运动分析原理图：</p>
 <p><img src="https://i.loli.net/2019/05/18/5cdfee1a0dbd914723.jpg" alt="加载不出显示的图片" title="测试图片"></p>
 <h2 id="二、速度部分的程序分析"><a href="#二、速度部分的程序分析" class="headerlink" title="二、速度部分的程序分析"></a>二、速度部分的程序分析</h2><h3 id="当然，也可以新建博客"><a href="#当然，也可以新建博客" class="headerlink" title="当然，也可以新建博客"></a>当然，也可以新建博客</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"Hexo教程"</span></span><br></pre></td></tr></table></figure>
@@ -960,19 +960,19 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">我的测试</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">test</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">搭建博客</a>
               </li>
              
               <li class="article-tag-list-item">
